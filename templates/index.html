@@ -5,23 +5,29 @@
     <title>Title</title>
 </head>
 <body>
-    <div style="text-align: center;">
-        <h1>
-            Hi this is my blog and this is my random number {{ num }} and this my fruit for today {{ fruitzz }}
-        </h1>
-        <ul>
+<div style="text-align: center;">
+    {% if request.user.is_authenticated %}
+    <h1>
+        Hi, my name is {{ request.user.username }} this is my blog and this is my random number {{ num }} and this my
+        fruit for today {{ fruitzz }}
+    </h1>
+    {% else %}
+    <h1>
+        <a href="/users/login/">Войти на сайт </a>
+    </h1>
+    {% endif %}
+    <ul>
         {% for i in blogs %}
-            <li>
-                <h3>{{ i.title }}</h3>
-                <p>
-                    <img src="{{ i.image.url }}" alt="">
-                </p>
-                <p>{{ i.description }}</p>
-                <p>{{ i.likes }}</p>
-            </li>
+        <li>
+            <h3><a href="/blog/{{ i.id }}/">{{ i.title }}</a></h3>
+            <p>
+                <img src="{{ i.image.url }}" alt="">
+            </p>
+            <p>{{ i.likes }}</p>
+        </li>
         {% endfor %}
-            </ul>
+    </ul>
 
-    </div>
+</div>
 </body>
 </html>
