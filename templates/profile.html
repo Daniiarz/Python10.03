@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PROFILE</title>
+</head>
+<body style="text-align: center">
+<h2>
+    Username: {{ request.user.username }}
+</h2>
+<h2>
+    Password: {{ request.user.password }}
+</h2>
+<form action="/accounts/profile/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit">
+</form>
+</body>
+</html>

@@ -4,6 +4,7 @@ from typing import List
 
 from django.conf import settings
 from django.http import HttpResponse, FileResponse, HttpRequest
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 
 from .models import BlogPost, Comment
@@ -18,9 +19,28 @@ def date_view(request):
     return HttpResponse(f"Now is {date}")
 
 
+def create_blog_view(request):
+    if request.method == "POST":
+        data = request.POST
+        files = request.FILES
+        title = data.get("title")
+        description = data.get("description")
+        image = files.get("image")
+        BlogPost.objects.create(title=title, image=image, description=description)
+        return redirect("post-list")
+    elif request.method == "GET":
+        return render(request, "blog_create.html")
+
+
 def file_response(request):
     file = open(f"{settings.BASE_DIR}/post/123.jpg", "rb")
     return FileResponse(file)
+
+
+def random_fruit_number():
+    num: int = random.randint(1, 1000)
+    fruit: str = random.choice(["apple", "mango", "watermelon", "banana", "orange"])
+    return num, fruit
 
 
 class PostListView(ListView):
@@ -30,8 +50,7 @@ class PostListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context: dict = super(PostListView, self).get_context_data(object_list=None, **kwargs)
-        num: int = random.randint(1, 1000)
-        fruit: str = random.choice(["apple", "mango", "watermelon", "banana"])
+        num, fruit = random_fruit_number()
         context["num"] = num
         context["fruitzz"] = fruit
         return context

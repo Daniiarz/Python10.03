@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new blog post</title>
+</head>
+<body>
+
+<form action="/blog/create/" method="post"  enctype="multipart/form-data">
+    {% csrf_token %}
+    <label >
+        Title:
+        <input name="title" type="text">
+    </label>
+    <label >
+        Description:
+        <input name="description" type="text">
+    </label>
+    <label >
+        Image:
+        <input name="image" type="file">
+    </label>
+    <input type="submit">
+</form>
+</body>
+</html>

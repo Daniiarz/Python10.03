@@ -1,5 +1,7 @@
 from django import forms
 
+from users.models import UserProfile
+
 
 class RegistrationForm(forms.Form):
     first_name = forms.CharField(required=False)
@@ -18,4 +20,18 @@ class RegistrationForm(forms.Form):
             self.add_error("password1", msg)
             self.add_error("password2", msg)
 
+        first_name: str = cleaned_data["first_name"]
+        if first_name.lower() == "bekbolsun" or first_name.lower().endswith("chik"):
+            self.add_error("first_name", "You are invalid!")
+
         return cleaned_data
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = [
+            "profile_pic",
+            "bio",
+            "age",
+        ]

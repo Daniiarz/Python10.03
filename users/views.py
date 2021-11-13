@@ -3,16 +3,26 @@ from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from users.forms import RegistrationForm
-from users.models import CustomUser
+from users.forms import RegistrationForm, ProfileForm
+from users.models import CustomUser, UserProfile
+
+
+def get_data():
+    return [123, 123, 123]
+
+
+def view_helper():
+    return "I'm here"
 
 
 def register_view(request):
+    text = view_helper()
+    my_list = get_data()
     if request.method == "POST":
         data: dict = request.POST
         form = RegistrationForm(data=data)
         if form.is_valid():
-            valid_data = form.cleaned_data
+            valid_data: dict = form.cleaned_data
             CustomUser.objects.create_user(
                 username=valid_data["username"],
                 email=valid_data["email"],
@@ -53,3 +63,25 @@ def logout_view(request):
     logout(request)
 
     return HttpResponse("Вы вышли")
+
+
+def update_profile(request):
+    form = ProfileForm()
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile = UserProfile.objects.get(user_id=request.user.id)
+            data = form.cleaned_data
+            if data.get("profile_pic"):
+                profile.profile_pic = data.get("profile_pic")
+            if data.get("age"):
+                profile.age = data.get("age")
+            if data.get("bio"):
+                profile.bio = data.get("bio")
+
+            profile.save()
+            return HttpResponse("Ready!!")
+        else:
+            return render(request, "profile.html", context={"form": form})
+    elif request.method == "GET":
+        return render(request, "profile.html", context={"form": form})

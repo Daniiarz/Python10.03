@@ -18,9 +18,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from users.views import update_profile
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include("post.urls")),
     path('users/', include("users.urls")),
+    path('accounts/', include('allauth.urls')),
+    path('accounts/profile/', update_profile)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
